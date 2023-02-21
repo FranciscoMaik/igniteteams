@@ -47,9 +47,9 @@ export function Players() {
           horizontal
         />
 
-        <S.NumbersOfPlayers>
+        <S.NumberOfPlayers>
           {players.length}
-        </S.NumbersOfPlayers>
+        </S.NumberOfPlayers>
       </S.HeaderList>
 
       <FlatList
