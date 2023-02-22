@@ -31,7 +31,6 @@ export function NewGroup(){
         Alert.alert("Novo Grupo", error.message);
       }else{
         Alert.alert("Novo Grupo", "Não foi possível criar um novo grupo.");
-        console.log(error);
       }
     }
 
