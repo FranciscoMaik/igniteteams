@@ -1,12 +1,13 @@
 import { useEffect, useState, useRef } from "react";
 import { Alert, FlatList, TextInput } from "react-native";
-import { useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 import { AppError } from "@utils/AppError";
 import { playerAddByGroup } from "@storage/player/playerAddByGroup";
 import { playersGetByGroupByTeam } from "@storage/player/playersGetByGroupAndTeam";
 import { playerRemoveByGroup } from "@storage/player/playerRemoveByGroup";
 import { PlayerStorageDTO } from "@storage/player/PlayerStorageDTO";
+import { groupRemoveByName } from "@storage/group/groupRemoveByName";
 
 import { Header } from "@components/Header";
 import { HighLight } from "@components/HighLight";
@@ -29,6 +30,7 @@ export function Players() {
   const [newPlayerName, setNewPlayerName] = useState("");
 
   const route = useRoute();
+  const navigation = useNavigation();
   const { group } = route.params as RouteParams;
 
   const newPlayerNameInputRef = useRef<TextInput>(null);
@@ -76,6 +78,36 @@ export function Players() {
       fetchPlayerByTeam();
     } catch (error) {
       Alert.alert("Remover pessoa", "Não foi possível remover esse jogador!");
+    }
+  }
+
+  async function groupRemove() {
+    try {
+      await groupRemoveByName(group);
+      navigation.navigate("groups");
+    } catch (error) {
+      Alert.alert("Remover grupo", "Não foi possível remover o grupo!");
+    }
+  }
+
+  async function handleGroupRemove(){
+    try {
+      Alert.alert(
+        "Remover",
+        "Deseja remove o grupo?",
+        [
+          {
+            text: "Não",
+            style: "cancel"
+          },
+          {
+            text: "Sim",
+            onPress: () => groupRemove()
+          }
+        ]
+      )
+    } catch (error) {
+      Alert.alert("Remover grupo", "Não foi possível remover esse grupo!");
     }
   }
 
@@ -140,7 +172,11 @@ export function Players() {
         ]}
       />
 
-      <Button title="Remover turma" type="SECONDARY"/>
+      <Button
+        title="Remover turma"
+        type="SECONDARY"
+        onPress={handleGroupRemove}
+      />
     </S.ContainerPlayers>
   );
 }
